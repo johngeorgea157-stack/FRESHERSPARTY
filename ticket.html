@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Your Ticket | UOW India Freshers Party 2026</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#07111f;
+    --card:#0d1b2e;
+    --line:#20334d;
+    --text:#f7fbff;
+    --muted:#9eb0c6;
+    --accent:#66e3ff;
+    --accent2:#9b7cff;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 80% 10%,#18275d 0,transparent 30%),
+        radial-gradient(circle at 10% 30%,#063d54 0,transparent 28%),
+        var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 16px;
+}
+
+.container{
+    width:min(720px,100%);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:24px;
+}
+
+.eyebrow{
+    color:var(--accent);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+
+.header h1{
+    font-family:'Space Grotesk';
+    font-size:clamp(34px,7vw,58px);
+    margin:10px 0 0;
+    letter-spacing:-.05em;
+}
+
+.ticket{
+    background:#f8fbff;
+    color:#08111e;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 30px 100px #0008;
+}
+
+.ticket-top{
+    padding:32px;
+    border-bottom:2px dashed #cbd5e1;
+}
+
+.ticket-brand{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.15em;
+    color:#64748b;
+}
+
+.ticket-title{
+    font-family:'Space Grotesk';
+    font-size:42px;
+    line-height:.95;
+    margin:14px 0;
+}
+
+.ticket-date{
+    font-weight:700;
+    font-size:15px;
+}
+
+.ticket-body{
+    padding:28px 32px;
+    display:grid;
+    grid-template-columns:1fr 190px;
+    gap:25px;
+    align-items:center;
+}
+
+.label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    color:#64748b;
+    font-weight:700;
+    margin-bottom:5px;
+}
+
+.value{
+    font-weight:700;
+    font-size:20px;
+    margin-bottom:20px;
+    word-break:break-word;
+}
+
+.registration{
+    font-family:monospace;
+    font-size:17px;
+}
+
+.qr{
+    width:170px;
+    height:170px;
+    object-fit:contain;
+    display:block;
+    margin:auto;
+}
+
+.valid{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#dcfce7;
+    color:#166534;
+    font-size:12px;
+    font-weight:700;
+}
+
+.valid-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#22c55e;
+}
+
+.ticket-bottom{
+    padding:18px 32px;
+    background:#eef2f7;
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    font-size:12px;
+    color:#64748b;
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:24px;
+}
+
+.btn{
+    border:0;
+    border-radius:12px;
+    padding:13px 20px;
+    font-weight:700;
+    cursor:pointer;
+    background:#fff;
+    color:#08111e;
+}
+
+.btn.primary{
+    background:linear-gradient(135deg,var(--accent),#b5f5ff);
+}
+
+.loading,
+.error{
+    text-align:center;
+    padding:40px;
+    background:#ffffff08;
+    border:1px solid var(--line);
+    border-radius:20px;
+}
+
+.error{
+    color:#ffb4b4;
+}
+
+@media(max-width:600px){
+
+    .ticket-body{
+        grid-template-columns:1fr;
+        text-align:center;
+    }
+
+    .qr{
+        order:-1;
+    }
+
+    .ticket-title{
+        font-size:34px;
+    }
+
+    .ticket-top,
+    .ticket-body{
+        padding:24px;
+    }
+
+    .ticket-bottom{
+        padding:16px 24px;
+        flex-direction:column;
+        text-align:center;
+    }
+}
+
+@media print{
+
+    body{
+        background:#fff;
+        padding:0;
+    }
+
+    .header,
+    .actions{
+        display:none;
+    }
+
+    .container{
+        width:100%;
+    }
+
+    .ticket{
+        box-shadow:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="eyebrow">
+            University of Wollongong India
+        </div>
+
+        <h1>Your Ticket</h1>
+    </div>
+
+    <div id="loading" class="loading">
+        Loading your ticket...
+    </div>
+
+    <div id="error" class="error" style="display:none;">
+        Unable to load ticket.
+    </div>
+
+    <div id="ticketContainer" style="display:none;">
+
+        <div class="ticket">
+
+            <div class="ticket-top">
+
+                <div class="ticket-brand">
+                    UOW INDIA · ADMIT ONE
+                </div>
+
+                <div class="ticket-title">
+                    FRESHERS<br>
+                    PARTY '26
+                </div>
+
+                <div class="ticket-date">
+                    07:00 PM · 09 SEP 2026 · WED
+                </div>
+
+            </div>
+
+            <div class="ticket-body">
+
+                <div>
+
+                    <div class="label">
+                        Name
+                    </div>
+
+                    <div id="name" class="value">
+                        —
+                    </div>
+
+                    <div class="label">
+                        Registration ID
+                    </div>
+
+                    <div id="registrationId"
+                         class="value registration">
+                        —
+                    </div>
+
+                    <div class="label">
+                        Course
+                    </div>
+
+                    <div id="course" class="value">
+                        —
+                    </div>
+
+                    <div class="label">
+                        Batch
+                    </div>
+
+                    <div id="batch" class="value">
+                        —
+                    </div>
+
+                    <div class="valid">
+                        <span class="valid-dot"></span>
+                        VALID TICKET
+                    </div>
+
+                </div>
+
+                <div>
+                    <img
+                        id="qr"
+                        class="qr"
+                        alt="Ticket QR Code"
+                    >
+                </div>
+
+            </div>
+
+            <div class="ticket-bottom">
+
+                <span>
+                    Freshers Party 2026
+                </span>
+
+                <span>
+                    Lounge Casanova
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button
+                class="btn primary"
+                onclick="window.print()">
+                Print / Save Ticket
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function loadTicket() {
+
+    const loading =
+        document.getElementById("loading");
+
+    const error =
+        document.getElementById("error");
+
+    const ticketContainer =
+        document.getElementById("ticketContainer");
+
+    try {
+
+        const pathParts =
+            window.location.pathname
+                .split("/")
+                .filter(Boolean);
+
+        const token =
+            pathParts[pathParts.length - 1];
+
+        if (!token) {
+            throw new Error(
+                "Ticket token is missing."
+            );
+        }
+
+        const response =
+            await fetch(
+                "/api/ticket?token=" +
+                encodeURIComponent(token)
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+            throw new Error(
+                result.message ||
+                "Invalid ticket."
+            );
+        }
+
+        const ticket =
+            result.ticket;
+
+        document.getElementById("name")
+            .textContent =
+            ticket.name || "—";
+
+        document.getElementById("registrationId")
+            .textContent =
+            ticket.registration_id || "—";
+
+        document.getElementById("course")
+            .textContent =
+            ticket.course || "—";
+
+        document.getElementById("batch")
+            .textContent =
+            ticket.batch || "—";
+
+        /*
+         * Retrieve QR from sessionStorage.
+         *
+         * The QR itself is not used for validation.
+         * The secure token in the URL is.
+         */
+
+        const storedTicket =
+            sessionStorage.getItem("ticket");
+
+        if (storedTicket) {
+
+            const parsed =
+                JSON.parse(storedTicket);
+
+            if (parsed.qr_code) {
+
+                document.getElementById("qr")
+                    .src = parsed.qr_code;
+
+            }
+
+        }
+
+        loading.style.display = "none";
+
+        ticketContainer.style.display =
+            "block";
+
+    } catch (err) {
+
+        console.error(
+            "Ticket loading error:",
+            err
+        );
+
+        loading.style.display = "none";
+
+        error.textContent =
+            err.message ||
+            "Unable to load ticket.";
+
+        error.style.display =
+            "block";
+    }
+}
+
+loadTicket();
+
+</script>
+
+</body>
+</html>
