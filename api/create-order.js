@@ -54,7 +54,7 @@ export default async function handler(req, res) {
 
     // Create Razorpay order
     const order = await razorpay.orders.create({
-      amount: 20000,
+      amount: 200,
       currency: "INR",
       receipt: registration.registration_id,
       notes: {
