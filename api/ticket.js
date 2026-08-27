@@ -71,7 +71,8 @@ export default async function handler(req, res) {
         course: registration.course,
         batch: registration.batch,
         ticket_type: registration.ticket_type,
-        ticket_status: registration.ticket_status
+        ticket_status: registration.ticket_status,
+        qr_code: registration.qr_code
       }
     });
 
