@@ -113,9 +113,13 @@ export default async function handler(req, res) {
         message: "Payment does not belong to this order."
       });
     }
-
+      const ticketPriceInr =
+    Number(process.env.TICKET_PRICE_INR || 200);
+  
+  const expectedAmount =
+    ticketPriceInr * 100;
     // Confirm amount = ₹200
-    if (payment.amount !== 20000) {
+    if (payment.amount !== expectedAmount) {
       return res.status(400).json({
         success: false,
         message: "Incorrect payment amount."
