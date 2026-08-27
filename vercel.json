@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/ticket/:token",
+      "destination": "/ticket.html?token=:token"
+    }
+  ]
+}
