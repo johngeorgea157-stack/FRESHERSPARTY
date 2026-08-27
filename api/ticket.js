@@ -33,7 +33,8 @@ export default async function handler(req, res) {
         batch,
         ticket_type,
         payment_status,
-        ticket_status
+        ticket_status,
+        qr_code
       `)
       .eq("ticket_token", token)
       .single();
