@@ -21,6 +21,8 @@ function generateTicketToken() {
 }
 
 export default async function handler(req, res) {
+
+  // Only allow POST
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
@@ -29,6 +31,7 @@ export default async function handler(req, res) {
   }
 
   try {
+
     const {
       registration_id,
       razorpay_order_id,
@@ -36,6 +39,7 @@ export default async function handler(req, res) {
       razorpay_signature
     } = req.body;
 
+    // Validate request
     if (
       !registration_id ||
       !razorpay_order_id ||
@@ -48,30 +52,51 @@ export default async function handler(req, res) {
       });
     }
 
-    // Find registration
-    const { data: registration, error: registrationError } =
-      await supabase
-        .from("registrations")
-        .select("*")
-        .eq("registration_id", registration_id)
-        .single();
+    // --------------------------------------------------
+    // STEP 1: Find registration
+    // --------------------------------------------------
+
+    const {
+      data: registration,
+      error: registrationError
+    } = await supabase
+      .from("registrations")
+      .select("*")
+      .eq("registration_id", registration_id)
+      .single();
 
     if (registrationError || !registration) {
+
+      console.error(
+        "Registration lookup error:",
+        registrationError
+      );
+
       return res.status(404).json({
         success: false,
         message: "Registration not found."
       });
     }
 
-    // Make sure the Razorpay order belongs to this registration
-    if (registration.razorpay_order_id !== razorpay_order_id) {
+    // --------------------------------------------------
+    // STEP 2: Verify Razorpay order belongs to registration
+    // --------------------------------------------------
+
+    if (
+      registration.razorpay_order_id !==
+      razorpay_order_id
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Payment order does not match registration."
+        message:
+          "Payment order does not match registration."
       });
     }
 
-    // Verify Razorpay signature
+    // --------------------------------------------------
+    // STEP 3: Verify Razorpay signature
+    // --------------------------------------------------
+
     const generatedSignature = crypto
       .createHmac(
         "sha256",
@@ -84,82 +109,138 @@ export default async function handler(req, res) {
       )
       .digest("hex");
 
-    const signaturesMatch =
-      generatedSignature === razorpay_signature;
-
-    if (!signaturesMatch) {
+    if (
+      generatedSignature !==
+      razorpay_signature
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid payment signature."
       });
     }
 
-    // Fetch payment from Razorpay
-    const payment = await razorpay.payments.fetch(
-      razorpay_payment_id
-    );
+    // --------------------------------------------------
+    // STEP 4: Fetch payment directly from Razorpay
+    // --------------------------------------------------
+
+    const payment =
+      await razorpay.payments.fetch(
+        razorpay_payment_id
+      );
 
     if (!payment) {
       return res.status(400).json({
         success: false,
-        message: "Payment could not be verified."
+        message:
+          "Payment could not be verified."
       });
     }
 
-    // Confirm payment belongs to the correct order
-    if (payment.order_id !== razorpay_order_id) {
+    // --------------------------------------------------
+    // STEP 5: Verify payment belongs to correct order
+    // --------------------------------------------------
+
+    if (
+      payment.order_id !==
+      razorpay_order_id
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Payment does not belong to this order."
-      });
-    }
-      const ticketPriceInr =
-    Number(process.env.TICKET_PRICE_INR || 200);
-  
-  const expectedAmount =
-    ticketPriceInr * 100;
-    // Confirm amount = ₹200
-    if (payment.amount !== expectedAmount) {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect payment amount."
+        message:
+          "Payment does not belong to this order."
       });
     }
 
-    // Confirm Razorpay captured the payment
-    if (payment.status !== "captured") {
+    // --------------------------------------------------
+    // STEP 6: Verify payment amount
+    // --------------------------------------------------
+
+    const ticketPriceInr =
+      Number(
+        process.env.TICKET_PRICE_INR || 200
+      );
+
+    const expectedAmount =
+      ticketPriceInr * 100;
+
+    if (
+      payment.amount !==
+      expectedAmount
+    ) {
+      console.error(
+        "Amount mismatch:",
+        {
+          expected: expectedAmount,
+          received: payment.amount
+        }
+      );
+
       return res.status(400).json({
         success: false,
-        message: "Payment has not been captured."
+        message:
+          `Incorrect payment amount. Expected ₹${ticketPriceInr}.`
       });
     }
 
-    // If ticket already exists, return it
+    // --------------------------------------------------
+    // STEP 7: Verify payment is captured
+    // --------------------------------------------------
+
+    if (
+      payment.status !== "captured"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Payment has not been captured."
+      });
+    }
+
+    // --------------------------------------------------
+    // STEP 8: Return existing ticket if already processed
+    // --------------------------------------------------
+
     if (
       registration.payment_status === "paid" &&
-      registration.ticket_token
+      registration.secure_ticket_token
     ) {
+
       const baseUrl =
         process.env.PUBLIC_URL ||
         "https://freshersparty-two.vercel.app";
 
       const ticketUrl =
-        `${baseUrl}/ticket/${registration.ticket_token}`;
+        `${baseUrl}/ticket/${registration.secure_ticket_token}`;
 
       return res.status(200).json({
         success: true,
-        message: "Payment already verified.",
+        message:
+          "Payment already verified.",
+
         registration_id:
           registration.registration_id,
+
         ticket_token:
-          registration.ticket_token,
-        ticket_url: ticketUrl,
-        qr_code: registration.qr_code
+          registration.secure_ticket_token,
+
+        ticket_url:
+          ticketUrl,
+
+        qr_code:
+          registration.qr_code
       });
     }
 
-    // Generate secure ticket token
-    const ticketToken = generateTicketToken();
+    // --------------------------------------------------
+    // STEP 9: Generate secure ticket token
+    // --------------------------------------------------
+
+    const ticketToken =
+      generateTicketToken();
+
+    // --------------------------------------------------
+    // STEP 10: Create ticket URL
+    // --------------------------------------------------
 
     const baseUrl =
       process.env.PUBLIC_URL ||
@@ -168,36 +249,63 @@ export default async function handler(req, res) {
     const ticketUrl =
       `${baseUrl}/ticket/${ticketToken}`;
 
-    // Generate QR code
-    const qrCode = await QRCode.toDataURL(
-      ticketUrl,
-      {
-        errorCorrectionLevel: "H",
-        margin: 2,
-        width: 500
-      }
-    );
+    // --------------------------------------------------
+    // STEP 11: Generate QR code
+    // --------------------------------------------------
 
-    // Save payment + ticket information
-    const { data: updatedRegistration, error: updateError } =
-      await supabase
-        .from("registrations")
-        .update({
-          payment_status: "paid",
-          razorpay_payment_id:
-            razorpay_payment_id,
-          ticket_token: ticketToken,
-          ticket_status: "VALID",
-          qr_code: qrCode
-        })
-        .eq(
-            "registration_id",
-            registration.registration_id
-          )
-        .select()
-        .single();
+    const qrCode =
+      await QRCode.toDataURL(
+        ticketUrl,
+        {
+          errorCorrectionLevel: "H",
+          margin: 2,
+          width: 500
+        }
+      );
+
+    // --------------------------------------------------
+    // STEP 12: Save payment + ticket
+    // --------------------------------------------------
+
+    const {
+      data: updatedRegistration,
+      error: updateError
+    } = await supabase
+      .from("registrations")
+      .update({
+
+        payment_status:
+          "paid",
+
+        razorpay_payment_id:
+          razorpay_payment_id,
+
+        secure_ticket_token:
+          ticketToken,
+
+        ticket_url:
+          ticketUrl,
+
+        ticket_status:
+          "VALID",
+
+        qr_code:
+          qrCode
+
+      })
+      .eq(
+        "registration_id",
+        registration.registration_id
+      )
+      .select()
+      .single();
+
+    // --------------------------------------------------
+    // STEP 13: Handle database error
+    // --------------------------------------------------
 
     if (updateError) {
+
       console.error(
         "Supabase update error:",
         updateError
@@ -210,18 +318,33 @@ export default async function handler(req, res) {
       });
     }
 
+    // --------------------------------------------------
+    // STEP 14: Return ticket information
+    // --------------------------------------------------
+
     return res.status(200).json({
+
       success: true,
+
       message:
         "Payment verified and ticket generated.",
+
       registration_id:
         updatedRegistration.registration_id,
-      ticket_token: ticketToken,
-      ticket_url: ticketUrl,
-      qr_code: qrCode
+
+      ticket_token:
+        ticketToken,
+
+      ticket_url:
+        ticketUrl,
+
+      qr_code:
+        qrCode
+
     });
 
   } catch (error) {
+
     console.error(
       "Payment verification error:",
       error
@@ -229,7 +352,8 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: "Could not verify payment."
+      message:
+        "Could not verify payment."
     });
   }
 }
