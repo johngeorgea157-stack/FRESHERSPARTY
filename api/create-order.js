@@ -51,10 +51,14 @@ export default async function handler(req, res) {
         message: "This registration has already been paid."
       });
     }
+   const ticketPriceInr =
+  Number(process.env.TICKET_PRICE_INR || 200);
 
+const amountInPaise =
+  ticketPriceInr * 100;
     // Create Razorpay order
     const order = await razorpay.orders.create({
-      amount: 200,
+      amount: amountInPaise,
       currency: "INR",
       receipt: registration.registration_id,
       notes: {
