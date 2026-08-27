@@ -190,7 +190,10 @@ export default async function handler(req, res) {
           ticket_status: "VALID",
           qr_code: qrCode
         })
-        .eq("id", registration.id)
+        .eq(
+            "registration_id",
+            registration.registration_id
+          )
         .select()
         .single();
 
