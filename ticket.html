@@ -443,22 +443,16 @@ async function loadTicket() {
          * The secure token in the URL is.
          */
 
-        const storedTicket =
-            sessionStorage.getItem("ticket");
+       if (ticket.qr_code) {
 
-        if (storedTicket) {
+    document.getElementById("qr").src =
+        ticket.qr_code;
 
-            const parsed =
-                JSON.parse(storedTicket);
+} else {
 
-            if (parsed.qr_code) {
+    console.warn("QR code not available.");
 
-                document.getElementById("qr")
-                    .src = parsed.qr_code;
-
-            }
-
-        }
+}
 
         loading.style.display = "none";
 
