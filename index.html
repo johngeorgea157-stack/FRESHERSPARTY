@@ -158,33 +158,123 @@ document.getElementById("registration").addEventListener("submit", async functio
 
         /* STEP 3: Open Razorpay Checkout */
 
-        const options = {
-            key: orderResult.key_id,
+       const options = {
+    key: orderResult.key_id,
 
-            amount: orderResult.amount,
+    amount: orderResult.amount,
 
-            currency: orderResult.currency,
+    currency: orderResult.currency,
 
-            name: "UOW India",
+    name: "UOW India",
 
-            description: "Freshers Party 2026",
+    description: "Freshers Party 2026",
 
-            order_id: orderResult.order_id,
+    order_id: orderResult.order_id,
 
-            prefill: {
-                name: data.name,
-                email: data.email,
-                contact: data.phone
-            },
+    prefill: {
+        name: data.name,
+        email: data.email,
+        contact: data.phone
+    },
 
-            notes: {
-                registration_id: registration.registration_id,
-                student_id: data.student_id
-            },
+    notes: {
+        registration_id: registration.registration_id,
+        student_id: data.student_id
+    },
 
-            theme: {
-                color: "#66e3ff"
-            },
+    theme: {
+        color: "#66e3ff"
+    },
+
+    handler: async function(response) {
+
+        console.log("Payment response:", response);
+
+        success.style.display = "block";
+        success.textContent =
+            "Payment completed. Verifying your payment...";
+
+        try {
+
+            const verificationResponse =
+                await fetch("/api/verify-payment", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        registration_id:
+                            registration.registration_id,
+
+                        razorpay_order_id:
+                            response.razorpay_order_id,
+
+                        razorpay_payment_id:
+                            response.razorpay_payment_id,
+
+                        razorpay_signature:
+                            response.razorpay_signature
+                    })
+                });
+
+            const result =
+                await verificationResponse.json();
+
+            console.log(
+                "Verification result:",
+                result
+            );
+
+            if (
+                !verificationResponse.ok ||
+                !result.success
+            ) {
+                throw new Error(
+                    result.message ||
+                    "Payment verification failed."
+                );
+            }
+
+            success.textContent =
+                "Payment verified! Your ticket is ready.";
+
+            sessionStorage.setItem(
+                "ticket",
+                JSON.stringify(result)
+            );
+
+            window.location.href =
+                result.ticket_url;
+
+        } catch (error) {
+
+            console.error(
+                "Payment verification error:",
+                error
+            );
+
+            success.textContent =
+                "Payment was received, but we could not verify it. Please contact the event team.";
+
+            button.disabled = false;
+
+            button.textContent =
+                "Continue to Payment →";
+        }
+    },
+
+    modal: {
+        ondismiss: function() {
+
+            button.disabled = false;
+
+            button.textContent =
+                "Continue to Payment →";
+        }
+    }
+};
 
            handler: async function(response) {
   console.log("Payment response:", response);
