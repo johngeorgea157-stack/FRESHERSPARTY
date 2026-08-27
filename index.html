@@ -186,24 +186,66 @@ document.getElementById("registration").addEventListener("submit", async functio
                 color: "#66e3ff"
             },
 
-            handler: function(response) {
+           handler: async function(response) {
+  console.log("Payment response:", response);
 
-                console.log(
-                    "Payment response:",
-                    response
-                );
+  success.style.display = "block";
+  success.textContent =
+    "Payment completed. Verifying your payment...";
 
-                success.style.display = "block";
+  try {
+    const verificationResponse = await fetch(
+      "/api/verify-payment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          registration_id: registration.registration_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        })
+      }
+    );
 
-                success.textContent =
-                    "Payment completed. Verifying your payment...";
+    const result = await verificationResponse.json();
 
-                /*
-                 * Payment verification will be added
-                 * in the next step.
-                 */
+    console.log("Verification result:", result);
 
-            },
+    if (!verificationResponse.ok || !result.success) {
+      throw new Error(
+        result.message || "Payment verification failed."
+      );
+    }
+
+    success.textContent =
+      "Payment verified! Your ticket is ready.";
+
+    // Store ticket information temporarily
+    sessionStorage.setItem(
+      "ticket",
+      JSON.stringify(result)
+    );
+
+    // Open personalized ticket
+    window.location.href = result.ticket_url;
+
+  } catch (error) {
+    console.error(
+      "Payment verification error:",
+      error
+    );
+
+    success.textContent =
+      "Payment was received, but we could not verify it. Please contact the event team.";
+
+    button.disabled = false;
+    button.textContent =
+      "Continue to Payment →";
+  }
+}
 
             modal: {
                 ondismiss: function() {
