@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         ticket_status,
         qr_code
       `)
-      .eq("ticket_token", token)
+      .eq("secure_ticket_token", token)
       .single();
 
     if (error || !registration) {
