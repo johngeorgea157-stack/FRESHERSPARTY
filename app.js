@@ -179,8 +179,8 @@ document.getElementById("app").innerHTML = `
                     Fields marked * are required.
                 </p>
 
-                <div class="pet-mode" role="group" aria-label="Choose your fox companion">
-                    <span class="pet-mode__label">Choose your fox</span>
+                <div class="pet-mode" role="group" aria-label="Choose your buddy">
+                    <span class="pet-mode__label">Choose your buddy</span>
                     <button type="button" class="pet-mode__option is-selected" data-pet-mode="friendly" aria-pressed="true">😊 Friendly</button>
                     <button type="button" class="pet-mode__option" data-pet-mode="extra-friendly" aria-pressed="false">🔥 Extra Friendly</button>
                     <button type="button" class="pet-mode__option" data-pet-mode="off" aria-pressed="false">🚫 No Pet</button>
