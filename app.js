@@ -113,10 +113,7 @@ document.getElementById("app").innerHTML = `
             <div class="cards">
 
                 <div class="card">
-
-                    <div class="icon">
-                        ✦
-                    </div>
+                    <div class="icon">✦</div>
 
                     <h3>
                         Meet your people
@@ -126,15 +123,11 @@ document.getElementById("app").innerHTML = `
                         Connect with Faculty classmates and students
                         across courses and years.
                     </p>
-
                 </div>
 
 
                 <div class="card">
-
-                    <div class="icon">
-                        ♫
-                    </div>
+                    <div class="icon">♫</div>
 
                     <h3>
                         Music & entertainment
@@ -143,15 +136,11 @@ document.getElementById("app").innerHTML = `
                     <p>
                         A high-energy evening designed to get everyone involved.
                     </p>
-
                 </div>
 
 
                 <div class="card">
-
-                    <div class="icon">
-                        ◉
-                    </div>
+                    <div class="icon">◉</div>
 
                     <h3>
                         Make it yours
@@ -160,7 +149,6 @@ document.getElementById("app").innerHTML = `
                     <p>
                         Photos, activities and plenty of moments worth remembering.
                     </p>
-
                 </div>
 
             </div>
@@ -192,11 +180,6 @@ document.getElementById("app").innerHTML = `
                 </p>
 
 
-                <!-- IMPORTANT:
-                     Keep the form ID and field names.
-                     payment.js currently uses them.
-                -->
-
                 <form id="registration">
 
                     <div class="grid">
@@ -209,6 +192,7 @@ document.getElementById("app").innerHTML = `
                             </label>
 
                             <input
+                                id="fullName"
                                 name="fullName"
                                 required
                                 placeholder="Your full name"
@@ -224,6 +208,7 @@ document.getElementById("app").innerHTML = `
                             </label>
 
                             <input
+                                id="studentId"
                                 name="studentId"
                                 required
                                 placeholder="e.g. 123456"
@@ -239,6 +224,7 @@ document.getElementById("app").innerHTML = `
                             </label>
 
                             <input
+                                id="email"
                                 type="email"
                                 name="email"
                                 required
@@ -255,6 +241,7 @@ document.getElementById("app").innerHTML = `
                             </label>
 
                             <input
+                                id="phone"
                                 type="tel"
                                 name="phone"
                                 required
@@ -271,6 +258,7 @@ document.getElementById("app").innerHTML = `
                             </label>
 
                             <input
+                                id="course"
                                 name="course"
                                 required
                                 placeholder="e.g. MBA"
@@ -285,35 +273,22 @@ document.getElementById("app").innerHTML = `
                                 Batch *
                             </label>
 
-                            <select name="BATCH" required>
+                            <select
+                                id="batch"
+                                name="BATCH"
+                                required
+                            >
 
                                 <option value="">
                                     Select Batch
                                 </option>
 
-                                <option>
-                                    Bachelors
-                                </option>
-
-                                <option>
-                                    Computing 1
-                                </option>
-
-                                <option>
-                                    Computing 2
-                                </option>
-
-                                <option>
-                                    Fintech 1
-                                </option>
-
-                                <option>
-                                    Fintech 2
-                                </option>
-
-                                <option>
-                                    Fintech 3
-                                </option>
+                                <option>Bachelors</option>
+                                <option>Computing 1</option>
+                                <option>Computing 2</option>
+                                <option>Fintech 1</option>
+                                <option>Fintech 2</option>
+                                <option>Fintech 3</option>
 
                             </select>
 
@@ -330,6 +305,7 @@ document.getElementById("app").innerHTML = `
                         </span>
 
                         <button
+                            id="payButton"
                             class="btn primary"
                             type="submit"
                         >
@@ -340,11 +316,9 @@ document.getElementById("app").innerHTML = `
 
 
                     <div
-                        id="success"
+                        id="paymentMessage"
                         class="success"
-                    >
-                        Registration details captured.
-                    </div>
+                    ></div>
 
 
                 </form>
@@ -357,8 +331,6 @@ document.getElementById("app").innerHTML = `
 
 </main>
 
-
-<!-- FOOTER -->
 
 <footer class="wrap footer">
 
@@ -383,3 +355,167 @@ document.getElementById("app").innerHTML = `
 </footer>
 
 `;
+
+
+/*
+|--------------------------------------------------------------------------
+| WEBSITE → PAYMENT ENGINE
+|--------------------------------------------------------------------------
+|
+| This is the only place where this particular website talks to
+| the generic payment engine.
+|
+*/
+
+document
+    .getElementById("registration")
+    .addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+
+        const form = e.target;
+
+        const button =
+            document.getElementById("payButton");
+
+        const message =
+            document.getElementById("paymentMessage");
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Collect website-specific information
+        |--------------------------------------------------------------------------
+        */
+
+        const customer = {
+
+            name:
+                document
+                    .getElementById("fullName")
+                    .value
+                    .trim(),
+
+            email:
+                document
+                    .getElementById("email")
+                    .value
+                    .trim(),
+
+            phone:
+                document
+                    .getElementById("phone")
+                    .value
+                    .trim()
+        };
+
+
+        const registrationData = {
+
+            student_id:
+                document
+                    .getElementById("studentId")
+                    .value
+                    .trim(),
+
+            course:
+                document
+                    .getElementById("course")
+                    .value
+                    .trim(),
+
+            batch:
+                document
+                    .getElementById("batch")
+                    .value
+        };
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ticket being purchased
+        |--------------------------------------------------------------------------
+        */
+
+        const items = [
+
+            {
+                id: "FRESHERS-2026",
+                quantity: 1
+            }
+
+        ];
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "Opening payment...";
+
+
+        try {
+
+            const result =
+                await Payment.start({
+
+                    customer: customer,
+
+                    items: items,
+
+                    metadata: registrationData
+
+                });
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Payment successful
+            |--------------------------------------------------------------------------
+            */
+
+            console.log(
+                "Payment successful:",
+                result
+            );
+
+
+            message.style.display = "block";
+
+            message.textContent =
+                "Payment verified! Your ticket is ready.";
+
+
+            if (result.ticket_url) {
+
+                sessionStorage.setItem(
+                    "ticket",
+                    JSON.stringify(result)
+                );
+
+                window.location.href =
+                    result.ticket_url;
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Payment error:",
+                error
+            );
+
+
+            message.style.display = "block";
+
+            message.textContent =
+                error.message ||
+                "Payment could not be completed.";
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "Continue to Payment →";
+        }
+
+    });
