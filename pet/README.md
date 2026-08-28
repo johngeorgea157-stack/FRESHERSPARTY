@@ -9,7 +9,9 @@ Place licensed, web-optimised GLB files at:
 - `pet/models/friendly.glb`
 - `pet/models/extra-friendly.glb`
 
-Each model should use a consistent scale and include named clips from the approved list in `api/pet-chat.js` (at least `Idle`, `Welcome`, `Happy`/`Smug`, and `Celebrate`). The module automatically uses named GLB clips when present. Until those licensed assets are supplied, it renders a lightweight real-time Three.js fox prototype so the integration, speech, state handling, and responsive safe overlay can be tested without a static image substitute.
+Each model should use a consistent scale and include named clips from the approved list in `api/pet-chat.js` (at least `Idle`, `Welcome`, `Happy`/`Smug`, and `Celebrate`). The module automatically uses named GLB clips and same-named facial morph targets when present.
+
+The visual reference calls for two polished, rigged characters—not primitive geometry. `friendly.glb` should be the orange-and-white fox in a cobalt-blue UOW hoodie with headphones/backpack and a welcoming expression. `extra-friendly.glb` should be the same fox universe in a black-and-purple hoodie with cap/sunglasses and a playful smirk. Both need a skeleton, PBR materials, expressive face morph targets, and the required named animation clips. Until real assets are supplied, the controller intentionally shows an asset-fitting notice rather than pretending a primitive model is final.
 
 ## AI configuration
 
