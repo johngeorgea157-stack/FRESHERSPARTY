@@ -1,223 +1,206 @@
-document.getElementById("registration").addEventListener("submit", async function(e) {
-    e.preventDefault();
 
-    const form = e.target;
-    const button = form.querySelector("button[type='submit']");
-    const success = document.getElementById("success");
-
-    const data = {
-        name: form.elements["fullName"].value.trim(),
-        student_id: form.elements["studentId"].value.trim(),
-        email: form.elements["email"].value.trim(),
-        phone: form.elements["phone"].value.trim(),
-        course: form.elements["course"].value.trim(),
-        batch: form.elements["BATCH"].value
-    };
-
-    button.disabled = true;
-    button.textContent = "Creating registration...";
-
-    try {
-
-        /* STEP 1: Create registration in Supabase */
-
-        const registrationResponse = await fetch("/api/registrations", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        const registrationResult = await registrationResponse.json();
-
-        if (!registrationResponse.ok || !registrationResult.success) {
+window.Payment = {
+    async start(paymentData) {
+        if (!paymentData) {
             throw new Error(
-                registrationResult.message ||
-                "Registration could not be completed."
+                "Payment data is missing."
             );
         }
+        if (!paymentData.customer) {
 
-        const registration =
-            registrationResult.registration;
+            throw new Error(
+                "Customer information is missing."
+            );
 
-        console.log("Registration created:", registration);
+        }
+        if (
+            !paymentData.customer.name ||
+            !paymentData.customer.email ||
+            !paymentData.customer.phone
+        ) {
+            throw new Error(
+                "Customer information is incomplete."
+            );
+        }
+        const orderResponse =
+            await fetch("/api/payment/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    customer:
+                        paymentData.customer,
+                    items:
+                        paymentData.items || [],
+                    metadata:
+                        paymentData.metadata || {}
+                })
+            });
+        const orderResult =
+            await orderResponse.json();
 
-        /* STEP 2: Create Razorpay order */
-
-        button.textContent = "Opening payment...";
-
-        const orderResponse = await fetch("/api/create-order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                registration_id: registration.registration_id
-            })
-        });
-
-        const orderResult = await orderResponse.json();
-
-        if (!orderResponse.ok || !orderResult.success) {
+        if (
+            !orderResponse.ok ||
+            !orderResult.success
+        ) {
             throw new Error(
                 orderResult.message ||
                 "Could not create payment order."
             );
         }
 
-        console.log("Razorpay order:", orderResult);
-
-        /* STEP 3: Open Razorpay Checkout */
+        console.log(
+            "Payment order created:",
+            orderResult
+        );
 
         const options = {
-
-            key: orderResult.key_id,
-
-            amount: orderResult.amount,
-
-            currency: orderResult.currency,
-
-            name: "UOW India",
-
-            description: "Freshers Party 2026",
-
-            order_id: orderResult.order_id,
-
+            key:
+                orderResult.key_id,
+            amount:
+                orderResult.amount,
+            currency:
+                orderResult.currency,
+            name:
+                orderResult.name ||
+                "Payment",
+            description:
+                orderResult.description ||
+                "Online Payment",
+            order_id:
+                orderResult.order_id,
             prefill: {
-                name: data.name,
-                email: data.email,
-                contact: data.phone
+                name:
+                    paymentData.customer.name,
+                email:
+                    paymentData.customer.email,
+                contact:
+                    paymentData.customer.phone
             },
-
-            notes: {
-                registration_id: registration.registration_id,
-                student_id: data.student_id
-            },
-
+            notes:
+                orderResult.notes || {},
             theme: {
-                color: "#66e3ff"
+                color:
+                    orderResult.theme_color ||
+                    "#66e3ff"
             },
+            handler:
+                async function (response) {
 
-            handler: async function(response) {
-
-                console.log("Payment response:", response);
-
-                success.style.display = "block";
-
-                success.textContent =
-                    "Payment completed. Verifying your payment...";
-
-                try {
-
+                    console.log(
+                        "Razorpay response:",
+                        response
+                    );
                     const verificationResponse =
-                        await fetch("/api/verify-payment", {
+                        await fetch(
+                            "/api/payment/verify",
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+                                body: JSON.stringify({
 
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-
-                            body: JSON.stringify({
-
-                                registration_id:
-                                    registration.registration_id,
-
-                                razorpay_order_id:
-                                    response.razorpay_order_id,
-
-                                razorpay_payment_id:
-                                    response.razorpay_payment_id,
-
-                                razorpay_signature:
-                                    response.razorpay_signature
-
-                            })
-
-                        });
-
+                                    razorpay_order_id:
+                                        response
+                                            .razorpay_order_id,
+                                    razorpay_payment_id:
+                                        response
+                                            .razorpay_payment_id,
+                                    razorpay_signature:
+                                        response
+                                            .razorpay_signature
+                                })
+                            }
+                        );
                     const result =
                         await verificationResponse.json();
-
                     console.log(
                         "Verification result:",
                         result
                     );
-
                     if (
                         !verificationResponse.ok ||
                         !result.success
                     ) {
 
                         throw new Error(
+
                             result.message ||
+
                             "Payment verification failed."
                         );
-
                     }
-
-                    success.textContent =
-                        "Payment verified! Your ticket is ready.";
-
-                    sessionStorage.setItem(
-                        "ticket",
-                        JSON.stringify(result)
-                    );
-
-                    window.location.href =
-                        result.ticket_url;
-
-                } catch (error) {
-
-                    console.error(
-                        "Payment verification error:",
-                        error
-                    );
-
-                    success.textContent =
-                        "Payment was received, but we could not verify it. Please contact the event team.";
-
-                    button.disabled = false;
-
-                    button.textContent =
-                        "Continue to Payment →";
+                    return result;
                 }
-            },
-
-            modal: {
-
-                ondismiss: function() {
-
-                    button.disabled = false;
-
-                    button.textContent =
-                        "Continue to Payment →";
-
-                }
-
-            }
-
         };
+        return new Promise(
+            function (resolve, reject) {
+                const razorpay =
+                    new Razorpay(options);
+                razorpay.on(
+                    "payment.failed",
+                    function (response) {
 
-        const razorpay =
-            new Razorpay(options);
+                        console.error(
+                            "Payment failed:",
+                            response
+                        );
+                        reject(
+                            new Error(
+                                response.error?.description ||
+                                "Payment failed."
+                            )
+                        );
+                    }
+                );
+                options.handler =
+                    async function (response) {
+                        try {
+                            const verificationResponse =
+                                await fetch(
+                                    "/api/payment/verify",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            razorpay_order_id:
+                                                response
+                                                    .razorpay_order_id,
+                                            razorpay_payment_id:
+                                                response
+                                                    .razorpay_payment_id,
+                                            razorpay_signature:
+                                                response
+                                                    .razorpay_signature
+                                        })
 
-        razorpay.open();
+                                    }
+                                );
 
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            error.message ||
-            "Something went wrong."
+                            const result =
+                                await verificationResponse.json();
+                            if (
+                                !verificationResponse.ok ||
+                                !result.success
+                            ) {
+                                throw new Error(
+                                    result.message ||
+                                    "Payment verification failed."
+                                );
+                            }
+                            resolve(result);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                razorpay.open();
+            }
         );
-
-        button.disabled = false;
-
-        button.textContent =
-            "Continue to Payment →";
     }
-});
+};
