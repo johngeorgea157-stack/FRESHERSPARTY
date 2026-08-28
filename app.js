@@ -179,6 +179,13 @@ document.getElementById("app").innerHTML = `
                     Fields marked * are required.
                 </p>
 
+                <div class="pet-mode" role="group" aria-label="Choose your fox companion">
+                    <span class="pet-mode__label">Choose your fox</span>
+                    <button type="button" class="pet-mode__option is-selected" data-pet-mode="friendly" aria-pressed="true">😊 Friendly</button>
+                    <button type="button" class="pet-mode__option" data-pet-mode="extra-friendly" aria-pressed="false">🔥 Extra Friendly</button>
+                    <button type="button" class="pet-mode__option" data-pet-mode="off" aria-pressed="false">🚫 No Pet</button>
+                </div>
+
 
                 <form id="registration">
 
@@ -483,6 +490,8 @@ document
 
             message.textContent =
                 "Payment verified! Your ticket is ready.";
+
+            window.dispatchEvent(new CustomEvent("pet:payment-success"));
 
 
             if (result.ticket_url) {
