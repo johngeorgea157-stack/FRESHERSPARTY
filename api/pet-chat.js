@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   const personality = context.mode === "extra-friendly" ? "You are a mischievous, confident Freshers Party fox. Give one short, playful roast about the supplied context. Never be cruel or target protected traits, health, money, appearance, sex, private data, or identity." : "You are a warm, encouraging Freshers Party fox welcoming a student. Give one short, natural and funny supportive response about the supplied context.";
   try {
     const { text } = await generateText({
-      model: "minimax/minimax-m3-free",
+      model: "minimax/minimax-m3",
       system: `${personality} Return JSON only, without Markdown, that matches this schema exactly: ${JSON.stringify(schema)}.`,
       prompt: `Safe pet context (contains no email, phone, student ID, or payment data): ${JSON.stringify(context)}`,
       maxOutputTokens: 120
