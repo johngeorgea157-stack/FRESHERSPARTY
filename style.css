@@ -189,7 +189,7 @@ a {
 
 .buddy-selector {
   position: absolute;
-  top: 28px;
+  top: 28%;
   left: 50%;
   transform: translateX(-50%);
 
