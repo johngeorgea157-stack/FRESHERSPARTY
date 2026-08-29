@@ -189,9 +189,8 @@ a {
 
 .buddy-selector {
   position: absolute;
-  top: 28px;
-  left: 50%;
-  right: auto;
+  top: 40%;
+  right: 28px;
   z-index: 50;
 
   display: flex;
