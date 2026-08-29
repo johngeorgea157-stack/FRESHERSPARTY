@@ -35,40 +35,34 @@ class PetCompanion {
   // --------------------------------------------------
   // INITIAL GREETING
   // --------------------------------------------------
+initialGreeting() {
+  const page =
+    document.body.dataset.page ||
+    (window.location.pathname.startsWith("/ticket/")
+      ? "ticket"
+      : "registration");
 
-  const page = document.body.dataset.page ||
-  (window.location.pathname.startsWith("/ticket/")
-    ? "ticket"
-    : "registration");
-    if (page === "ticket") {
-      this.say(
-        this.mode === "friendly"
-          ? "You made it! 🎉 Your Freshers Party ticket is ready!"
-          : "You actually got the ticket. I was starting to doubt you. 😂",
-        "Celebrate",
-        this.mode === "friendly"
-          ? "Excited"
-          : "Smirk"
-      );
-
-      setTimeout(() => {
-        this.ticketReaction();
-      }, 1800);
-
-      return;
-    }
-
+  if (page === "ticket") {
     this.say(
       this.mode === "friendly"
-        ? "Hi! I’m your Freshers Party fox. Tell me a little about you!"
-        : "Extra Friendly mode? Interesting choice. 😈 Let's see what you've got.",
-      "Welcome",
-      this.mode === "friendly"
-        ? "Smile"
-        : "Smirk"
+        ? "You made it! 🎉 Your Freshers Party ticket is ready!"
+        : "You actually got the ticket. Respect. 😂",
+      "Celebrate",
+      this.mode === "friendly" ? "Excited" : "Smirk"
     );
+
+    setTimeout(() => this.ticketReaction(), 1800);
+    return;
   }
 
+  this.say(
+    this.mode === "friendly"
+      ? "Hi! I’m your Freshers Party fox. Tell me a little about you!"
+      : "Extra Friendly mode? Interesting choice. 😈 Let's see what you've got.",
+    "Welcome",
+    this.mode === "friendly" ? "Smile" : "Smirk"
+  );
+}
   // --------------------------------------------------
   // CREATE PET UI
   // --------------------------------------------------
