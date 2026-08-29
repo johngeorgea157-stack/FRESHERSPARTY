@@ -284,53 +284,69 @@ class PetCompanion {
     );
   }
 
-  bind() {
-    let timer;
+ bind() {
+  let timer;
 
-    document.querySelector("#fullName")?.addEventListener("input", () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => this.react(), 900);
-    });
+  document.querySelector("#fullName")?.addEventListener("input", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => this.react(), 900);
+  });
 
-    ["#course", "#batch"].forEach(selector => {
-      document.querySelector(selector)?.addEventListener("change", () => this.react());
-      document.querySelector(selector)?.addEventListener("blur", () => this.react());
-    });
+  ["#course", "#batch"].forEach(selector => {
+    const field = document.querySelector(selector);
 
-    document.querySelector("#registration")?.addEventListener("submit", () => {
-      this.say(
-        "Almost there — I’m guarding the payment button from bad vibes.",
-        "Excited",
-        "Excited"
-      );
-    });
+    field?.addEventListener("change", () => this.react());
+    field?.addEventListener("blur", () => this.react());
+  });
 
-    document.querySelectorAll("[data-pet-mode]").forEach(button => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll("[data-pet-mode]").forEach(b => {
-          const active = b === button;
-          b.classList.toggle("is-selected", active);
-          b.setAttribute("aria-pressed", String(active));
-        });
+  document.querySelector("#registration")?.addEventListener("submit", () => {
+    this.say(
+      "Almost there — I’m guarding the payment button from bad vibes.",
+      "Excited",
+      "Excited"
+    );
+  });
 
-        this.setMode(button.dataset.petMode);
+  // Pet mode selector
+  document.querySelectorAll("[data-pet-mode]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+
+      const mode = button.dataset.petMode;
+
+      document.querySelectorAll("[data-pet-mode]").forEach(b => {
+        const active = b.dataset.petMode === mode;
+
+        b.classList.toggle("is-selected", active);
+        b.setAttribute("aria-pressed", String(active));
       });
-    });
 
-    window.addEventListener("pet:payment-success", () => {
-      this.say(
-        "Ticket secured! See you on the dance floor! 🎉",
-        "Celebrate",
-        "Excited"
-      );
+      this.setMode(mode);
     });
+  });
 
-    document.addEventListener("visibilitychange", () => {
-      document.hidden ? this.clock.stop() : this.clock.start();
-    });
-  }
+  // Restore selected mode visually
+  document.querySelectorAll("[data-pet-mode]").forEach(button => {
+    const active = button.dataset.petMode === this.mode;
+
+    button.classList.toggle("is-selected", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  window.addEventListener("pet:payment-success", () => {
+    this.say(
+      "Ticket secured! See you on the dance floor! 🎉",
+      "Celebrate",
+      "Excited"
+    );
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    document.hidden
+      ? this.clock.stop()
+      : this.clock.start();
+  });
 }
-
 try {
   if (window.WebGLRenderingContext) new PetCompanion();
 } catch (error) {
