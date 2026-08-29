@@ -6,61 +6,14 @@ document.getElementById("app").innerHTML = `
         UOW <span>INDIA</span>
     </div>
 
-    <div class="nav-right">
+    <a href="#register">Register</a>
 
-        <div class="buddy-selector">
-            <span class="buddy-label">🦊 Buddy</span>
-
-            <button
-                type="button"
-                class="buddy-select"
-                id="buddySelect"
-                aria-expanded="false"
-            >
-                😊 Friendly <span>⌄</span>
-            </button>
-
-            <div class="buddy-menu" id="buddyMenu">
-
-                <button
-                    type="button"
-                    data-pet-mode="friendly"
-                    class="buddy-option is-selected"
-                    aria-pressed="true"
-                >
-                    😊 Friendly
-                </button>
-
-                <button
-                    type="button"
-                    data-pet-mode="extra-friendly"
-                    class="buddy-option"
-                    aria-pressed="false"
-                >
-                    🔥 Extra Friendly
-                </button>
-
-                <button
-                    type="button"
-                    data-pet-mode="off"
-                    class="buddy-option"
-                    aria-pressed="false"
-                >
-                    🚫 No Buddy
-                </button>
-
-            </div>
-        </div>
-
-        <a href="#register">Register</a>
-
-        <div class="mobile-menu">
-            FRESHERS '26
-        </div>
-
+    <div class="mobile-menu">
+        FRESHERS '26
     </div>
 
 </header>
+
 
 <main>
 
@@ -113,6 +66,64 @@ document.getElementById("app").innerHTML = `
 
                 <div class="orb"></div>
 
+
+                <!-- BUDDY SELECTOR -->
+
+                <div class="buddy-selector">
+
+                    <span class="buddy-label">
+                        🦊 Buddy
+                    </span>
+
+                    <button
+                        type="button"
+                        class="buddy-select"
+                        id="buddySelect"
+                        aria-expanded="false"
+                    >
+                        😊 Friendly <span>⌄</span>
+                    </button>
+
+
+                    <div
+                        class="buddy-menu"
+                        id="buddyMenu"
+                    >
+
+                        <button
+                            type="button"
+                            class="buddy-option is-selected"
+                            data-pet-mode="friendly"
+                            aria-pressed="true"
+                        >
+                            😊 Friendly
+                        </button>
+
+                        <button
+                            type="button"
+                            class="buddy-option"
+                            data-pet-mode="extra-friendly"
+                            aria-pressed="false"
+                        >
+                            🔥 Extra Friendly
+                        </button>
+
+                        <button
+                            type="button"
+                            class="buddy-option"
+                            data-pet-mode="off"
+                            aria-pressed="false"
+                        >
+                            🚫 No Buddy
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TICKET -->
+
                 <div class="ticket">
 
                     <div class="mini">
@@ -162,7 +173,10 @@ document.getElementById("app").innerHTML = `
             <div class="cards">
 
                 <div class="card">
-                    <div class="icon">✦</div>
+
+                    <div class="icon">
+                        ✦
+                    </div>
 
                     <h3>
                         Meet your people
@@ -172,11 +186,15 @@ document.getElementById("app").innerHTML = `
                         Connect with Faculty classmates and students
                         across courses and years.
                     </p>
+
                 </div>
 
 
                 <div class="card">
-                    <div class="icon">♫</div>
+
+                    <div class="icon">
+                        ♫
+                    </div>
 
                     <h3>
                         Music & entertainment
@@ -185,11 +203,15 @@ document.getElementById("app").innerHTML = `
                     <p>
                         A high-energy evening designed to get everyone involved.
                     </p>
+
                 </div>
 
 
                 <div class="card">
-                    <div class="icon">◉</div>
+
+                    <div class="icon">
+                        ◉
+                    </div>
 
                     <h3>
                         Make it yours
@@ -198,6 +220,7 @@ document.getElementById("app").innerHTML = `
                     <p>
                         Photos, activities and plenty of moments worth remembering.
                     </p>
+
                 </div>
 
             </div>
@@ -209,7 +232,10 @@ document.getElementById("app").innerHTML = `
 
     <!-- REGISTRATION -->
 
-    <section id="register" class="form-section">
+    <section
+        id="register"
+        class="form-section"
+    >
 
         <div class="wrap">
 
@@ -227,7 +253,8 @@ document.getElementById("app").innerHTML = `
                     Fill in your details below.
                     Fields marked * are required.
                 </p>
-                
+
+
                 <form id="registration">
 
                     <div class="grid">
@@ -331,12 +358,29 @@ document.getElementById("app").innerHTML = `
                                     Select Batch
                                 </option>
 
-                                <option>Bachelors</option>
-                                <option>Computing 1</option>
-                                <option>Computing 2</option>
-                                <option>Fintech 1</option>
-                                <option>Fintech 2</option>
-                                <option>Fintech 3</option>
+                                <option>
+                                    Bachelors
+                                </option>
+
+                                <option>
+                                    Computing 1
+                                </option>
+
+                                <option>
+                                    Computing 2
+                                </option>
+
+                                <option>
+                                    Fintech 1
+                                </option>
+
+                                <option>
+                                    Fintech 2
+                                </option>
+
+                                <option>
+                                    Fintech 3
+                                </option>
 
                             </select>
 
@@ -405,6 +449,226 @@ document.getElementById("app").innerHTML = `
 `;
 
 
+
+/*
+|--------------------------------------------------------------------------
+| BUDDY SELECTOR
+|--------------------------------------------------------------------------
+|
+| The buddy selector lives inside the hero ticket visual.
+| The actual pet switching is still handled by pet.js
+| through the data-pet-mode attributes.
+|
+*/
+
+const buddySelect =
+    document.getElementById("buddySelect");
+
+const buddyMenu =
+    document.getElementById("buddyMenu");
+
+
+/*
+|--------------------------------------------------------------------------
+| OPEN / CLOSE MENU
+|--------------------------------------------------------------------------
+*/
+
+buddySelect?.addEventListener(
+    "click",
+    function (e) {
+
+        e.stopPropagation();
+
+        const isOpen =
+            buddyMenu.classList.toggle("is-open");
+
+        buddySelect.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+    }
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| SELECT BUDDY
+|--------------------------------------------------------------------------
+*/
+
+document
+    .querySelectorAll(".buddy-option")
+    .forEach(option => {
+
+        option.addEventListener(
+            "click",
+            function () {
+
+                const mode =
+                    this.dataset.petMode;
+
+                /*
+                 * Update selected state
+                 */
+
+                document
+                    .querySelectorAll(".buddy-option")
+                    .forEach(button => {
+
+                        const selected =
+                            button === this;
+
+                        button.classList.toggle(
+                            "is-selected",
+                            selected
+                        );
+
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(selected)
+                        );
+
+                    });
+
+
+                /*
+                 * Update main selector button
+                 */
+
+                buddySelect.innerHTML =
+                    `${this.textContent.trim()} <span>⌄</span>`;
+
+
+                /*
+                 * Close menu
+                 */
+
+                buddyMenu.classList.remove(
+                    "is-open"
+                );
+
+                buddySelect.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+
+                /*
+                 * Save selection.
+                 *
+                 * pet.js can also manage this,
+                 * but saving here makes the header
+                 * selector persistent across pages.
+                 */
+
+                try {
+
+                    localStorage.setItem(
+                        "pet-mode",
+                        mode
+                    );
+
+                } catch {}
+
+
+            }
+        );
+
+    });
+
+
+/*
+|--------------------------------------------------------------------------
+| CLOSE WHEN CLICKING OUTSIDE
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener(
+    "click",
+    function (e) {
+
+        if (
+            !e.target.closest(
+                ".buddy-selector"
+            )
+        ) {
+
+            buddyMenu?.classList.remove(
+                "is-open"
+            );
+
+            buddySelect?.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+    }
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| RESTORE SAVED BUDDY
+|--------------------------------------------------------------------------
+*/
+
+try {
+
+    const savedMode =
+        localStorage.getItem("pet-mode");
+
+    if (
+        savedMode === "friendly" ||
+        savedMode === "extra-friendly" ||
+        savedMode === "off"
+    ) {
+
+        const savedOption =
+            document.querySelector(
+                `.buddy-option[data-pet-mode="${savedMode}"]`
+            );
+
+        if (savedOption) {
+
+            document
+                .querySelectorAll(".buddy-option")
+                .forEach(button => {
+
+                    const selected =
+                        button === savedOption;
+
+                    button.classList.toggle(
+                        "is-selected",
+                        selected
+                    );
+
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(selected)
+                    );
+
+                });
+
+
+            if (buddySelect) {
+
+                buddySelect.innerHTML =
+                    `${savedOption.textContent.trim()} <span>⌄</span>`;
+
+            }
+
+        }
+
+    }
+
+} catch {}
+
+
+
 /*
 |--------------------------------------------------------------------------
 | WEBSITE → PAYMENT ENGINE
@@ -417,155 +681,178 @@ document.getElementById("app").innerHTML = `
 
 document
     .getElementById("registration")
-    .addEventListener("submit", async function (e) {
+    .addEventListener(
+        "submit",
+        async function (e) {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        const form = e.target;
+            const form =
+                e.target;
 
-        const button =
-            document.getElementById("payButton");
+            const button =
+                document.getElementById(
+                    "payButton"
+                );
 
-        const message =
-            document.getElementById("paymentMessage");
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Collect website-specific information
-        |--------------------------------------------------------------------------
-        */
-
-        const customer = {
-
-            name:
-                document
-                    .getElementById("fullName")
-                    .value
-                    .trim(),
-
-            email:
-                document
-                    .getElementById("email")
-                    .value
-                    .trim(),
-
-            phone:
-                document
-                    .getElementById("phone")
-                    .value
-                    .trim()
-        };
-
-
-        const registrationData = {
-
-            student_id:
-                document
-                    .getElementById("studentId")
-                    .value
-                    .trim(),
-
-            course:
-                document
-                    .getElementById("course")
-                    .value
-                    .trim(),
-
-            batch:
-                document
-                    .getElementById("batch")
-                    .value
-        };
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Ticket being purchased
-        |--------------------------------------------------------------------------
-        */
-
-        const items = [
-
-            {
-                id: "FRESHERS-2026",
-                quantity: 1
-            }
-
-        ];
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "Opening payment...";
-
-
-        try {
-
-            const result =
-                await Payment.start({
-
-                    customer: customer,
-
-                    items: items,
-
-                    metadata: registrationData
-
-                });
+            const message =
+                document.getElementById(
+                    "paymentMessage"
+                );
 
 
             /*
             |--------------------------------------------------------------------------
-            | Payment successful
+            | Collect website-specific information
             |--------------------------------------------------------------------------
             */
 
-            console.log(
-                "Payment successful:",
-                result
-            );
+            const customer = {
+
+                name:
+                    document
+                        .getElementById("fullName")
+                        .value
+                        .trim(),
+
+                email:
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim(),
+
+                phone:
+                    document
+                        .getElementById("phone")
+                        .value
+                        .trim()
+
+            };
 
 
-            message.style.display = "block";
+            const registrationData = {
 
-            message.textContent =
-                "Payment verified! Your ticket is ready.";
+                student_id:
+                    document
+                        .getElementById("studentId")
+                        .value
+                        .trim(),
 
-            window.dispatchEvent(new CustomEvent("pet:payment-success"));
+                course:
+                    document
+                        .getElementById("course")
+                        .value
+                        .trim(),
 
+                batch:
+                    document
+                        .getElementById("batch")
+                        .value
 
-            if (result.ticket_url) {
-
-                sessionStorage.setItem(
-                    "ticket",
-                    JSON.stringify(result)
-                );
-
-                window.location.href =
-                    result.ticket_url;
-            }
-
-
-        } catch (error) {
-
-            console.error(
-                "Payment error:",
-                error
-            );
+            };
 
 
-            message.style.display = "block";
+            /*
+            |--------------------------------------------------------------------------
+            | Ticket being purchased
+            |--------------------------------------------------------------------------
+            */
 
-            message.textContent =
-                error.message ||
-                "Payment could not be completed.";
+            const items = [
+
+                {
+                    id: "FRESHERS-2026",
+                    quantity: 1
+                }
+
+            ];
 
 
-            button.disabled = false;
+            button.disabled = true;
 
             button.textContent =
-                "Continue to Payment →";
-        }
+                "Opening payment...";
 
-    });
+
+            try {
+
+                const result =
+                    await Payment.start({
+
+                        customer:
+                            customer,
+
+                        items:
+                            items,
+
+                        metadata:
+                            registrationData
+
+                    });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Payment successful
+                |--------------------------------------------------------------------------
+                */
+
+                console.log(
+                    "Payment successful:",
+                    result
+                );
+
+
+                message.style.display =
+                    "block";
+
+                message.textContent =
+                    "Payment verified! Your ticket is ready.";
+
+
+                window.dispatchEvent(
+                    new CustomEvent(
+                        "pet:payment-success"
+                    )
+                );
+
+
+                if (result.ticket_url) {
+
+                    sessionStorage.setItem(
+                        "ticket",
+                        JSON.stringify(result)
+                    );
+
+                    window.location.href =
+                        result.ticket_url;
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Payment error:",
+                    error
+                );
+
+
+                message.style.display =
+                    "block";
+
+                message.textContent =
+                    error.message ||
+                    "Payment could not be completed.";
+
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    "Continue to Payment →";
+
+            }
+
+        }
+    );
