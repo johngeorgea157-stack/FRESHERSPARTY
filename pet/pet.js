@@ -144,7 +144,7 @@ class PetCompanion {
       );
 
       this.model = gltf.scene;
-      this.model.scale.setScalar(1.5);
+      this.model.scale.setScalar(2);
       this.root.add(this.model);
 
       this.mixer =
