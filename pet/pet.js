@@ -633,51 +633,42 @@ class PetCompanion {
   // --------------------------------------------------
 
   setMode(mode) {
-    this.mode =
-      mode;
+  this.mode = mode;
+  localStorage.setItem("pet-mode", mode);
+  this.lastContextKey = "";
+  this.el.hidden = mode === "off";
 
-    localStorage.setItem(
-      "pet-mode",
-      mode
+  if (mode === "off") return;
+
+  this.loadModel(mode);
+
+  if (document.body.dataset.page === "ticket") {
+    this.say(
+      mode === "friendly"
+        ? "Your ticket is ready! 🎉 See you at Freshers!"
+        : "You actually made it. Respect. 😂 See you at Freshers!",
+      "Celebrate",
+      mode === "friendly" ? "Excited" : "Smirk"
     );
 
-    this.lastContextKey =
-      "";
-
-    this.el.hidden =
-      mode === "off";
-
-    if (
-      mode !== "off"
-    ) {
-      this.loadModel(
-        mode
-      );
-
-      this.say(
-        mode === "friendly"
-          ? "Friendly mode on — let’s make this easy!"
-          : "Extra Friendly mode on. I’ve brought jokes. 😈",
-        "Welcome",
-        mode === "friendly"
-          ? "Smile"
-          : "Smirk"
-      );
-    }
+    setTimeout(() => this.ticketReaction(), 1200);
+    return;
   }
 
+  this.say(
+    mode === "friendly"
+      ? "Friendly mode on — let’s make this easy!"
+      : "Extra Friendly mode on. I’ve brought jokes. 😈",
+    "Welcome",
+    mode === "friendly" ? "Smile" : "Smirk"
+  );
+}
   // --------------------------------------------------
   // EVENTS
   // --------------------------------------------------
 
   bind() {
-
-    // --------------------------
-    // NAME
-    // --------------------------
-
     let nameTimer;
-
     document
       .querySelector(
         "#fullName"
