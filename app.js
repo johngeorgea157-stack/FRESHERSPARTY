@@ -183,7 +183,7 @@ document.getElementById("app").innerHTML = `
                     <span class="pet-mode__label">Choose your buddy</span>
                     <button type="button" class="pet-mode__option is-selected" data-pet-mode="friendly" aria-pressed="true">😊 Friendly</button>
                     <button type="button" class="pet-mode__option" data-pet-mode="extra-friendly" aria-pressed="false">🔥 Extra Friendly</button>
-                    <button type="button" class="pet-mode__option" data-pet-mode="off" aria-pressed="false">🚫 No Pet</button>
+                    <button type="button" class="pet-mode__option" data-pet-mode="off" aria-pressed="false">🚫 No Buddy</button>
                 </div>
 
 
