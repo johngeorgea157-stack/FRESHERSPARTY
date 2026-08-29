@@ -2,8 +2,12 @@
   "name": "freshers-party-2026",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
+    "ai": "^7.0.0",
     "razorpay": "^2.9.6",
     "qrcode": "^1.5.4"
   }
