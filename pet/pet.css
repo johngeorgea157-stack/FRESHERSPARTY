@@ -26,52 +26,57 @@
 
 .pet-companion__bubble {
   position: absolute;
-  right: 46px;
-  bottom: 205px;
-  width: min(285px, 74vw);
-  padding: 13px 15px;
+  left: 50%;
+  bottom: 245px;
+  right: auto;
+  width: min(220px, 68vw);
+  padding: 9px 11px;
   border: 1px solid #b9f5ff77;
-  border-radius: 20px;
+  border-radius: 14px;
   background: #091729f2;
   color: #f7fbff;
-  font: 500 13px/1.45 system-ui, sans-serif;
-  box-shadow: 0 12px 35px #0007;
+  font: 500 11.5px/1.4 system-ui, sans-serif;
+  box-shadow: 0 10px 25px #0007;
   opacity: 0;
-  transform: translateY(8px) scale(.97);
+  transform: translate(-50%, 8px) scale(.97);
   transition: .2s;
   visibility: hidden;
+  z-index: 10;
 }
 
 /* Thought bubble */
-.pet-companion__bubble::before,
-.pet-companion__bubble::after {
+
+.pet-companion__bubble::before {
   content: "";
   position: absolute;
+  left: 50%;
+  bottom: -15px;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%);
   border-radius: 50%;
   background: #091729f2;
   border: 1px solid #b9f5ff77;
 }
 
-.pet-companion__bubble::before {
-  width: 11px;
-  height: 11px;
-  right: 20px;
-  bottom: -18px;
-}
-
 .pet-companion__bubble::after {
-  width: 6px;
-  height: 6px;
-  right: 10px;
-  bottom: -29px;
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -25px;
+  width: 5px;
+  height: 5px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #091729f2;
+  border: 1px solid #b9f5ff77;
 }
 
 .pet-companion__bubble.is-visible {
   visibility: visible;
   opacity: 1;
-  transform: none;
+  transform: translate(-50%, 0) scale(1);
 }
-
 @media (max-width: 800px) {
   #pet-companion {
     width: 135px;
