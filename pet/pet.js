@@ -700,8 +700,8 @@ class PetCompanion {
 
           this.say(
             this.mode === "friendly"
-              ? "Hey! You're tickling me! 😂"
-              : "Oi! Put me down! 😈",
+              ? "Hey! Easy there, you're tickling me! 😂"
+              : "Oi! Put me down! I have places to be!😈",
             this.mode === "friendly"
               ? "Curious"
               : "Tease",
@@ -725,7 +725,8 @@ class PetCompanion {
             e.pointerId
           );
         } catch {}
-
+        // Hide the drag message immediately
+        this.bubble.classList.remove("is-visible");
         this.playAnimation("Idle");
       }
     );
