@@ -15,4 +15,4 @@ The visual reference calls for two polished, rigged characters—not primitive g
 
 ## AI configuration
 
-Set `OPENAI_API_KEY` and optionally `PET_AI_MODEL` in Vercel. The key is only read by `api/pet-chat.js`. If no key is configured or the provider is unavailable, the endpoint returns a safe contextual fallback response and the registration/payment flow remains unaffected.
+Set `AI_GATEWAY_API_KEY` in Vercel. `api/pet-chat.js` uses the Vercel AI SDK with `minimax/minimax-m3-free`; the gateway key is only read on the server. If no key is configured or the gateway is unavailable, the endpoint returns a safe contextual fallback response and the registration/payment flow remains unaffected.
