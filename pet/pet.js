@@ -664,8 +664,7 @@ initialGreeting() {
   // --------------------------------------------------
   // EVENTS
   // --------------------------------------------------
-
- bind() {
+bind() {
   let nameTimer;
 
   document
@@ -679,10 +678,15 @@ initialGreeting() {
       );
     });
 
-  // ...keep all your existing event listeners here...
+  // YOUR EXISTING COURSE/BATCH CODE
+  // YOUR EXISTING SUBMIT CODE
+  // YOUR EXISTING MODE BUTTON CODE
+  // YOUR EXISTING PAYMENT SUCCESS CODE
+  // YOUR EXISTING VISIBILITY CODE
 
 
-  // 🦊 Make the pet draggable
+  // 🦊 DRAGGING — PUT THIS AT THE VERY END
+
   let dragging = false;
   let offsetX = 0;
   let offsetY = 0;
@@ -690,14 +694,10 @@ initialGreeting() {
   this.el.addEventListener("pointerdown", (e) => {
     dragging = true;
 
-    const rect =
-      this.el.getBoundingClientRect();
+    const rect = this.el.getBoundingClientRect();
 
-    offsetX =
-      e.clientX - rect.left;
-
-    offsetY =
-      e.clientY - rect.top;
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
 
     this.el.style.cursor = "grabbing";
     this.el.setPointerCapture(e.pointerId);
@@ -706,19 +706,11 @@ initialGreeting() {
   this.el.addEventListener("pointermove", (e) => {
     if (!dragging) return;
 
-    const x =
-      e.clientX - offsetX;
+    const x = e.clientX - offsetX;
+    const y = e.clientY - offsetY;
 
-    const y =
-      e.clientY - offsetY;
-
-    const maxX =
-      window.innerWidth -
-      this.el.offsetWidth;
-
-    const maxY =
-      window.innerHeight -
-      this.el.offsetHeight;
+    const maxX = window.innerWidth - this.el.offsetWidth;
+    const maxY = window.innerHeight - this.el.offsetHeight;
 
     this.el.style.left =
       `${Math.max(0, Math.min(x, maxX))}px`;
@@ -734,7 +726,8 @@ initialGreeting() {
     dragging = false;
     this.el.style.cursor = "grab";
   });
-}
+} // ← THIS closes bind()
+
     // --------------------------
     // COURSE / BATCH
     // --------------------------
@@ -760,6 +753,7 @@ initialGreeting() {
           () => this.react()
         );
       }
+      
     );
 
     // --------------------------
