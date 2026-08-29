@@ -102,7 +102,7 @@ class PetCompanion {
       100
     );
 
-    this.camera.position.set(0, 1.2, 5);
+    this.camera.position.set(0, 1.2, 8);
 
     this.scene.add(
       new THREE.HemisphereLight(
