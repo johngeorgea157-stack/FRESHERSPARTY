@@ -36,10 +36,11 @@ class PetCompanion {
   // INITIAL GREETING
   // --------------------------------------------------
 
-  initialGreeting() {
-    const page =
-      document.body.dataset.page || "registration";
-
+  const page =
+  document.body.dataset.page ||
+  (window.location.pathname.startsWith("/ticket/")
+    ? "ticket"
+    : "registration");
     if (page === "ticket") {
       this.say(
         this.mode === "friendly"
