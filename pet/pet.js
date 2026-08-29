@@ -582,90 +582,95 @@ class PetCompanion {
   // TICKET REACTION
   // --------------------------------------------------
 
-  async ticketReaction() {
-    if (
-      this.mode === "off"
-    ) {
-      return;
-    }
+async ticketReaction() {
+  if (this.mode === "off") return;
 
-    const context =
-      this.context();
+  const context = this.context();
 
-    if (
-      !context.name &&
-      !context.course &&
-      !context.batch
-    ) {
-      return;
-    }
-
-    try {
-      const reply =
-        await requestPetReply({
-          ...context,
-          event: "ticket_view"
-        });
-
-      this.say(
-        reply.message,
-        reply.animation,
-        reply.expression
-      );
-
-    } catch {
-      this.say(
-        this.mode ===
-          "friendly"
-          ? "Your ticket is ready! I’ll see you at Freshers! 🎉"
-          : "You actually got the ticket. I was starting to doubt you. 😂",
-        "Celebrate",
-        this.mode ===
-          "friendly"
-          ? "Excited"
-          : "Smirk"
-      );
-    }
+  if (
+    !context.name &&
+    !context.course &&
+    !context.batch
+  ) {
+    return;
   }
 
+  try {
+    const reply = await requestPetReply({
+      ...context,
+      event: "ticket_view"
+    });
+
+    this.say(
+      reply.message,
+      reply.animation,
+      reply.expression
+    );
+
+  } catch {
+    this.say(
+      this.mode === "friendly"
+        ? `Nice work${context.name ? `, ${context.name}` : ""}! Your ticket is ready. 🎉`
+        : `${context.name || "You"} actually made it. Respect. 😂 Your ticket is ready!`,
+      "Celebrate",
+      this.mode === "friendly"
+        ? "Excited"
+        : "Smirk"
+    );
+  }
+}
   // --------------------------------------------------
   // CHANGE MODE
   // --------------------------------------------------
 
   setMode(mode) {
-    this.mode =
-      mode;
+  this.mode = mode;
 
-    localStorage.setItem(
-      "pet-mode",
-      mode
-    );
+  localStorage.setItem("pet-mode", mode);
 
-    this.lastContextKey =
-      "";
+  this.lastContextKey = "";
 
-    this.el.hidden =
-      mode === "off";
+  this.el.hidden = mode === "off";
 
-    if (
-      mode !== "off"
-    ) {
-      this.loadModel(
-        mode
-      );
-
-      this.say(
-        mode === "friendly"
-          ? "Friendly mode on — let’s make this easy!"
-          : "Extra Friendly mode on. I’ve brought jokes. 😈",
-        "Welcome",
-        mode === "friendly"
-          ? "Smile"
-          : "Smirk"
-      );
-    }
+  if (mode === "off") {
+    return;
   }
 
+  this.loadModel(mode);
+
+  const page =
+    document.body.dataset.page || "registration";
+
+  // Ticket page
+  if (page === "ticket") {
+    this.say(
+      mode === "friendly"
+        ? "Your ticket's ready! 🎉"
+        : "Your ticket's ready. You actually made it. 😂",
+      "Welcome",
+      mode === "friendly"
+        ? "Smile"
+        : "Smirk"
+    );
+
+    setTimeout(() => {
+      this.ticketReaction();
+    }, 1200);
+
+    return;
+  }
+
+  // Registration page
+  this.say(
+    mode === "friendly"
+      ? "Friendly mode on — let’s make this easy!"
+      : "Extra Friendly mode on. I’ve brought jokes. 😈",
+    "Welcome",
+    mode === "friendly"
+      ? "Smile"
+      : "Smirk"
+  );
+}
   // --------------------------------------------------
   // EVENTS
   // --------------------------------------------------
