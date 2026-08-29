@@ -27,7 +27,7 @@
 .pet-companion__bubble {
   position: absolute;
   left: 50%;
-  bottom: 245px;
+  bottom: 150px;
   right: auto;
   width: min(220px, 68vw);
   padding: 9px 11px;
