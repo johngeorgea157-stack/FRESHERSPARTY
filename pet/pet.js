@@ -36,8 +36,7 @@ class PetCompanion {
   // INITIAL GREETING
   // --------------------------------------------------
 
-  const page =
-  document.body.dataset.page ||
+  const page = document.body.dataset.page ||
   (window.location.pathname.startsWith("/ticket/")
     ? "ticket"
     : "registration");
