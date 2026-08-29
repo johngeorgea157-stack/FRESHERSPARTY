@@ -114,7 +114,7 @@ class PetCompanion {
 
     const key = new THREE.DirectionalLight(
       0xffffff,
-      3.5
+      6.5
     );
 
     key.position.set(3, 5, 4);
