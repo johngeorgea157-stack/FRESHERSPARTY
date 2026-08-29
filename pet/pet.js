@@ -665,29 +665,76 @@ initialGreeting() {
   // EVENTS
   // --------------------------------------------------
 
-  bind() {
-    let nameTimer;
-    document
-      .querySelector(
-        "#fullName"
-      )
-      ?.addEventListener(
-        "input",
-        () => {
+ bind() {
+  let nameTimer;
 
-          clearTimeout(
-            nameTimer
-          );
+  document
+    .querySelector("#fullName")
+    ?.addEventListener("input", () => {
+      clearTimeout(nameTimer);
 
-          nameTimer =
-            setTimeout(
-              () =>
-                this.react(),
-              900
-            );
-        }
+      nameTimer = setTimeout(
+        () => this.react(),
+        900
       );
+    });
 
+  // ...keep all your existing event listeners here...
+
+
+  // 🦊 Make the pet draggable
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  this.el.addEventListener("pointerdown", (e) => {
+    dragging = true;
+
+    const rect =
+      this.el.getBoundingClientRect();
+
+    offsetX =
+      e.clientX - rect.left;
+
+    offsetY =
+      e.clientY - rect.top;
+
+    this.el.style.cursor = "grabbing";
+    this.el.setPointerCapture(e.pointerId);
+  });
+
+  this.el.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+
+    const x =
+      e.clientX - offsetX;
+
+    const y =
+      e.clientY - offsetY;
+
+    const maxX =
+      window.innerWidth -
+      this.el.offsetWidth;
+
+    const maxY =
+      window.innerHeight -
+      this.el.offsetHeight;
+
+    this.el.style.left =
+      `${Math.max(0, Math.min(x, maxX))}px`;
+
+    this.el.style.top =
+      `${Math.max(0, Math.min(y, maxY))}px`;
+
+    this.el.style.right = "auto";
+    this.el.style.bottom = "auto";
+  });
+
+  this.el.addEventListener("pointerup", () => {
+    dragging = false;
+    this.el.style.cursor = "grab";
+  });
+}
     // --------------------------
     // COURSE / BATCH
     // --------------------------
