@@ -1,17 +1,66 @@
 document.getElementById("app").innerHTML = `
 
 <header class="wrap nav">
+
     <div class="brand">
         UOW <span>INDIA</span>
     </div>
 
-    <a href="#register">Register</a>
+    <div class="nav-right">
 
-    <div class="mobile-menu">
-        FRESHERS '26
+        <div class="buddy-selector">
+            <span class="buddy-label">🦊 Buddy</span>
+
+            <button
+                type="button"
+                class="buddy-select"
+                id="buddySelect"
+                aria-expanded="false"
+            >
+                😊 Friendly <span>⌄</span>
+            </button>
+
+            <div class="buddy-menu" id="buddyMenu">
+
+                <button
+                    type="button"
+                    data-pet-mode="friendly"
+                    class="buddy-option is-selected"
+                    aria-pressed="true"
+                >
+                    😊 Friendly
+                </button>
+
+                <button
+                    type="button"
+                    data-pet-mode="extra-friendly"
+                    class="buddy-option"
+                    aria-pressed="false"
+                >
+                    🔥 Extra Friendly
+                </button>
+
+                <button
+                    type="button"
+                    data-pet-mode="off"
+                    class="buddy-option"
+                    aria-pressed="false"
+                >
+                    🚫 No Buddy
+                </button>
+
+            </div>
+        </div>
+
+        <a href="#register">Register</a>
+
+        <div class="mobile-menu">
+            FRESHERS '26
+        </div>
+
     </div>
-</header>
 
+</header>
 
 <main>
 
@@ -178,15 +227,7 @@ document.getElementById("app").innerHTML = `
                     Fill in your details below.
                     Fields marked * are required.
                 </p>
-
-                <div class="pet-mode" role="group" aria-label="Choose your buddy">
-                    <span class="pet-mode__label">Choose your buddy</span>
-                    <button type="button" class="pet-mode__option is-selected" data-pet-mode="friendly" aria-pressed="true">😊 Friendly</button>
-                    <button type="button" class="pet-mode__option" data-pet-mode="extra-friendly" aria-pressed="false">🔥 Extra Friendly</button>
-                    <button type="button" class="pet-mode__option" data-pet-mode="off" aria-pressed="false">🚫 No Buddy</button>
-                </div>
-
-
+                
                 <form id="registration">
 
                     <div class="grid">
