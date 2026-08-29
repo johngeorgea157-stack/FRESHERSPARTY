@@ -624,16 +624,20 @@ class PetCompanion {
       }
     );
 
-    // DRAG PET
+ // --------------------------------------------------
+    // DRAG PET + DRAG REACTION
+    // --------------------------------------------------
 
     let dragging = false;
     let offsetX = 0;
     let offsetY = 0;
+    let dragMessageShown = false;
 
     this.el.addEventListener(
       "pointerdown",
       e => {
         dragging = true;
+        dragMessageShown = false;
 
         const rect =
           this.el.getBoundingClientRect();
@@ -689,15 +693,40 @@ class PetCompanion {
 
         this.el.style.bottom =
           "auto";
+
+        // Show a reaction once per drag
+        if (!dragMessageShown) {
+          dragMessageShown = true;
+
+          this.say(
+            this.mode === "friendly"
+              ? "Hey! You're tickling me! 😂"
+              : "Oi! Put me down! 😈",
+            this.mode === "friendly"
+              ? "Curious"
+              : "Tease",
+            this.mode === "friendly"
+              ? "Smile"
+              : "Smirk"
+          );
+        }
       }
     );
 
     this.el.addEventListener(
       "pointerup",
-      () => {
+      e => {
         dragging = false;
         this.el.style.cursor =
           "grab";
+
+        try {
+          this.el.releasePointerCapture(
+            e.pointerId
+          );
+        } catch {}
+
+        this.playAnimation("Idle");
       }
     );
   }
