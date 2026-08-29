@@ -643,11 +643,15 @@ class PetCompanion {
 
   this.loadModel(mode);
 
-  if (document.body.dataset.page === "ticket") {
+  const isTicket =
+    document.body.dataset.page === "ticket" ||
+    window.location.pathname.startsWith("/ticket/");
+
+  if (isTicket) {
     this.say(
       mode === "friendly"
         ? "Your ticket is ready! 🎉 See you at Freshers!"
-        : "You actually made it. Respect. 😂 See you at Freshers!",
+        : "Ticket secured. Somehow you survived registration. 😂",
       "Celebrate",
       mode === "friendly" ? "Excited" : "Smirk"
     );
