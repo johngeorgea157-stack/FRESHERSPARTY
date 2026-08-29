@@ -661,37 +661,88 @@ initialGreeting() {
     mode === "friendly" ? "Smile" : "Smirk"
   );
 }
-  // --------------------------------------------------
-  // EVENTS
-  // --------------------------------------------------
+// --------------------------------------------------
+// EVENTS
+// --------------------------------------------------
+
 bind() {
   let nameTimer;
 
-  document
-    .querySelector("#fullName")
-    ?.addEventListener("input", () => {
-      clearTimeout(nameTimer);
+  document.querySelector("#fullName")?.addEventListener("input", () => {
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(() => this.react(), 900);
+  });
 
-      nameTimer = setTimeout(
-        () => this.react(),
-        900
-      );
+  // COURSE / BATCH
+  ["#course", "#batch"].forEach(selector => {
+    const field = document.querySelector(selector);
+
+    field?.addEventListener("change", () => this.react());
+    field?.addEventListener("blur", () => this.react());
+  });
+
+  // REGISTRATION
+  document.querySelector("#registration")?.addEventListener("submit", () => {
+    this.say(
+      "Almost there — I’m guarding the payment button from bad vibes.",
+      "Excited",
+      "Excited"
+    );
+  });
+
+  // PET MODE BUTTONS
+  document.querySelectorAll("[data-pet-mode]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+
+      const mode = button.dataset.petMode;
+
+      document.querySelectorAll("[data-pet-mode]").forEach(b => {
+        const active = b.dataset.petMode === mode;
+
+        b.classList.toggle("is-selected", active);
+        b.setAttribute("aria-pressed", String(active));
+      });
+
+      this.setMode(mode);
     });
+  });
 
-  // YOUR EXISTING COURSE/BATCH CODE
-  // YOUR EXISTING SUBMIT CODE
-  // YOUR EXISTING MODE BUTTON CODE
-  // YOUR EXISTING PAYMENT SUCCESS CODE
-  // YOUR EXISTING VISIBILITY CODE
+  // Restore selected mode
+  document.querySelectorAll("[data-pet-mode]").forEach(button => {
+    const active = button.dataset.petMode === this.mode;
 
+    button.classList.toggle("is-selected", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
 
-  // 🦊 DRAGGING — PUT THIS AT THE VERY END
+  // PAYMENT SUCCESS
+  window.addEventListener("pet:payment-success", () => {
+    this.say(
+      "Ticket secured! See you on the dance floor! 🎉",
+      "Celebrate",
+      "Excited"
+    );
+  });
+
+  // VISIBILITY
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      this.clock.stop();
+    } else {
+      this.clock.start();
+    }
+  });
+
+  // --------------------------------------------------
+  // DRAG PET
+  // --------------------------------------------------
 
   let dragging = false;
   let offsetX = 0;
   let offsetY = 0;
 
-  this.el.addEventListener("pointerdown", (e) => {
+  this.el.addEventListener("pointerdown", e => {
     dragging = true;
 
     const rect = this.el.getBoundingClientRect();
@@ -703,7 +754,7 @@ bind() {
     this.el.setPointerCapture(e.pointerId);
   });
 
-  this.el.addEventListener("pointermove", (e) => {
+  this.el.addEventListener("pointermove", e => {
     if (!dragging) return;
 
     const x = e.clientX - offsetX;
@@ -726,135 +777,6 @@ bind() {
     dragging = false;
     this.el.style.cursor = "grab";
   });
-} // ← THIS closes bind()
-
-    // --------------------------
-    // COURSE / BATCH
-    // --------------------------
-
-    [
-      "#course",
-      "#batch"
-    ].forEach(
-      selector => {
-
-        const field =
-          document.querySelector(
-            selector
-          );
-
-        field?.addEventListener(
-          "change",
-          () => this.react()
-        );
-
-        field?.addEventListener(
-          "blur",
-          () => this.react()
-        );
-      }
-      
-    );
-
-    // --------------------------
-    // REGISTRATION
-    // --------------------------
-
-    document
-      .querySelector(
-        "#registration"
-      )
-      ?.addEventListener(
-        "submit",
-        () => {
-
-          this.say(
-            "Almost there — I’m guarding the payment button from bad vibes.",
-            "Excited",
-            "Excited"
-          );
-        }
-      );
-
-    // --------------------------
-    // PET MODE BUTTONS
-    // --------------------------
-
-    document
-      .querySelectorAll(
-        "[data-pet-mode]"
-      )
-      .forEach(
-        button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              document
-                .querySelectorAll(
-                  "[data-pet-mode]"
-                )
-                .forEach(
-                  b => {
-
-                    const active =
-                      b === button;
-
-                    b.classList.toggle(
-                      "is-selected",
-                      active
-                    );
-
-                    b.setAttribute(
-                      "aria-pressed",
-                      String(active)
-                    );
-                  }
-                );
-
-              this.setMode(
-                button.dataset.petMode
-              );
-            }
-          );
-        }
-      );
-
-    // --------------------------
-    // PAYMENT SUCCESS
-    // --------------------------
-
-    window.addEventListener(
-      "pet:payment-success",
-      () => {
-
-        this.say(
-          "Ticket secured! See you on the dance floor! 🎉",
-          "Celebrate",
-          "Excited"
-        );
-      }
-    );
-
-    // --------------------------
-    // VISIBILITY
-    // --------------------------
-
-    document.addEventListener(
-      "visibilitychange",
-      () => {
-
-        if (
-          document.hidden
-        ) {
-          this.clock.stop();
-        } else {
-          this.clock.start();
-        }
-      }
-    );
-  }
 }
 
 // ------------------------------------------------------
