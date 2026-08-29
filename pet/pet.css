@@ -62,7 +62,7 @@
 .pet-companion__bubble::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 48%;
   bottom: -25px;
   width: 5px;
   height: 5px;
