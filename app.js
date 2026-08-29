@@ -72,7 +72,7 @@ document.getElementById("app").innerHTML = `
                 <div class="buddy-selector">
 
                     <span class="buddy-label">
-                        🦊 Choose your Buddy
+                     Choose your Buddy
                     </span>
 
                     <button
