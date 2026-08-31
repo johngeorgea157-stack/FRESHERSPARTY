@@ -166,6 +166,7 @@ a {
   position: relative;
   overflow: hidden;
   box-shadow: 0 30px 100px #0006;
+  isolation: isolate;
 }
 
 .orb {
@@ -189,14 +190,18 @@ a {
 
 .buddy-selector {
   position: absolute;
-  top: 24%;
+  top: 28px;
   left: 50%;
+  right: auto;
+
   transform: translateX(-50%);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  z-index: 9999;
 }
 
 .buddy-label {
@@ -247,14 +252,17 @@ a {
 
 .buddy-menu {
   position: absolute;
+
   top: calc(100% + 8px);
-  right: 0;
+  left: 50%;
+  right: auto;
 
-  width: 175px;
+  transform: translateX(-50%);
 
-  padding: 6px;
+  width: 205px;
+  padding: 7px;
 
-  border: 1px solid #b9f5ff44;
+  border: 1px solid #b9f5ff55;
   border-radius: 14px;
 
   background: #091729f7;
@@ -264,7 +272,8 @@ a {
   backdrop-filter: blur(16px);
 
   display: none;
-  z-index: 200;
+
+  z-index: 10000;
 }
 
 .buddy-menu.is-open {
@@ -310,10 +319,12 @@ a {
 
 .ticket {
   position: absolute;
+
   left: 35px;
   right: 35px;
   bottom: 42px;
 
+  z-index: 1;
 
   background: #f8fbff;
   color: #08111e;
@@ -325,7 +336,6 @@ a {
   transform: rotate(-5deg);
 
   box-shadow: 0 30px 70px #0007;
-  z-index: 5;
 }
 
 .ticket .mini {
