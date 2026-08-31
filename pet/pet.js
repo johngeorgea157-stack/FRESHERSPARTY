@@ -17,17 +17,27 @@ const reducedMotion =
 
 class PetCompanion {
   constructor() {
-    this.mode = localStorage.getItem("pet-mode") || "friendly";
-    this.state = "IDLE";
-    this.lastContextKey = "";
-    this.clock = new THREE.Clock();
+  this.mode = localStorage.getItem("pet-mode") || "friendly";
+  this.state = "IDLE";
+  this.lastContextKey = "";
+  this.clock = new THREE.Clock();
 
-    this.mount();
-    this.setupScene();
-    this.bind();
-    this.animate();
-    this.initialGreeting();
+  this.mount();
+
+  this.setupScene();
+
+  this.bind();
+
+  this.animate();
+
+  if (this.mode !== "off") {
+    this.say(
+      "Hi! I’m your Freshers Party fox. Tell me a little about you!",
+      "Welcome",
+      "Smile"
+    );
   }
+}
 
   initialGreeting() {
     const page =
@@ -123,7 +133,11 @@ class PetCompanion {
     this.root = new THREE.Group();
     this.scene.add(this.root);
 
-    this.loadModel(this.mode);
+    if (this.mode !== "off") {
+      this.loadModel(this.mode);
+    } else {
+      this.el.hidden = true;
+    }
     this.resize();
 
     new ResizeObserver(() => this.resize())
