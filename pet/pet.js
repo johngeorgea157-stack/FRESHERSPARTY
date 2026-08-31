@@ -621,6 +621,52 @@ class PetCompanion {
           String(active)
         );
       });
+    window.addEventListener(
+  "pet:ticket-ready",
+  e => {
+
+    const ticket = e.detail;
+
+    if (this.mode === "off") return;
+
+    const context = {
+      name: ticket.name || "",
+      course: ticket.course || "",
+      batch: ticket.batch || "",
+      mode: this.mode
+    };
+
+    this.lastContextKey =
+      JSON.stringify(context);
+
+    this.playAnimation(
+      this.mode === "friendly"
+        ? "Curious"
+        : "Smug"
+    );
+
+    requestPetReply(context)
+      .then(reply => {
+
+        this.say(
+          reply.message,
+          reply.animation,
+          reply.expression
+        );
+
+      })
+      .catch(() => {
+
+        this.say(
+          "Your ticket is ready! See you at Freshers! 🎉",
+          "Celebrate",
+          "Smile"
+        );
+
+      });
+
+  }
+);
 
     window.addEventListener(
       "pet:payment-success",
