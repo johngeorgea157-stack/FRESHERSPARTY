@@ -246,7 +246,7 @@ body{
 </style>
 </head>
 
-<body>
+<body data-page="ticket">
 
 <div class="container">
 
@@ -435,7 +435,17 @@ async function loadTicket() {
         document.getElementById("batch")
             .textContent =
             ticket.batch || "—";
-
+        
+        window.dispatchEvent(
+    new CustomEvent("pet:ticket-ready", {
+        detail: {
+            name: ticket.name || "",
+            course: ticket.course || "",
+            batch: ticket.batch || "",
+            registrationId: ticket.registration_id || ""
+        }
+    })
+);
         /*
          * Retrieve QR from sessionStorage.
          *
