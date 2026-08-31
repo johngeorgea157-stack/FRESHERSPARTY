@@ -114,7 +114,7 @@ document.getElementById("app").innerHTML = `
                             data-pet-mode="off"
                             aria-pressed="false"
                         >
-                            🚫 No Buddy
+                             No Buddy
                         </button>
 
                     </div>
