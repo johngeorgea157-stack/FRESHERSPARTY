@@ -124,7 +124,7 @@ class PetCompanion {
       new THREE.HemisphereLight(
         0xe9f9ff,
         0x192438,
-        2.4
+        25
       )
     );
 
