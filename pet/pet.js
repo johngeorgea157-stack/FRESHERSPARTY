@@ -124,13 +124,13 @@ class PetCompanion {
       new THREE.HemisphereLight(
         0xe9f9ff,
         0x192438,
-        25
+        2.4
       )
     );
 
     const key = new THREE.DirectionalLight(
       0xffffff,
-      20.5
+      25
     );
 
     key.position.set(3, 5, 4);
