@@ -244,10 +244,10 @@ a {
 }
 
 .buddy-select span {
-  margin-left: 5px;
+  margin-left: 3px;
   color: var(--accent);
   position: relative;
-  top: -2.5px;
+  top: -3px;
 }
 
 /* DROPDOWN */
