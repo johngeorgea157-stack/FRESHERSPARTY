@@ -321,7 +321,7 @@ class PetCompanion {
         this.bubble.classList.remove(
           "is-visible"
         );
-      }, 6200);
+      }, 12000);
   }
 
   context() {
