@@ -30,7 +30,12 @@ class PetCompanion {
 
   this.animate();
 
-  if (this.mode !== "off") {
+ if (this.mode !== "off") {
+  const isTicketPage =
+    document.body.dataset.page === "ticket" ||
+    window.location.pathname.startsWith("/ticket/");
+
+  if (!isTicketPage) {
     this.say(
       "Hi! I’m your Freshers Party fox. Tell me a little about you!",
       "Welcome",
@@ -38,6 +43,7 @@ class PetCompanion {
     );
   }
 }
+
 
   initialGreeting() {
     const page =
